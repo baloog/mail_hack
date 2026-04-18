@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mail App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Main container for the app -->
+  <div class="app-container">
+    
+    <!-- Header with Compose button and Simulate Mail button -->
+    <header class="app-header">
+      <h1>Mail App</h1>
+      <div class="header-actions">
+        <button class="simulate-btn" id="simulateMailBtn">📧 Simulate New Mail</button>
+        <button class="compose-btn" id="composeBtn">+ Compose</button>
+      </div>
+    </header>
+
+    <!-- Notification Status Box (hidden by default) -->
+    <div id="notificationStatus" class="notification-status" style="display: none;">
+      <div class="notification-content">
+        <span id="notificationText">New mail arrived</span>
+        <button class="notification-close" id="closeNotification">&times;</button>
+      </div>
+    </div>
+
+    <!-- Main content area -->
+    <div class="main-content">
+      
+      <!-- Sidebar: Inbox and Sent -->
+      <aside class="sidebar">
+        <!-- Assistant Status Box -->
+        <div id="assistantStatus" class="assistant-status" style="display: none;">
+          <div class="status-header">🤖 Assistant</div>
+          <p id="assistantStatusText">Initializing...</p>
+        </div>
+
+        <!-- Inbox Section -->
+        <div class="sidebar-section">
+          <h2>Inbox</h2>
+          <!-- Notification Status in Sidebar -->
+          <div id="inboxStatus" class="inbox-status" style="display: none;">
+            <p id="inboxStatusText"></p>
+          </div>
+          <div class="message-list" id="messageList">
+            <!-- Messages will be added here by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Sent Section -->
+        <div class="sidebar-section">
+          <h2>Sent</h2>
+          <div class="message-list" id="sentList">
+            <!-- Sent messages will be added here by JavaScript -->
+          </div>
+          <p class="empty-folder" id="sentEmpty" style="display: block; text-align: center; color: #95a5a6; padding: 15px; font-size: 13px;">No sent messages yet</p>
+        </div>
+      </aside>
+
+      <!-- Message View area -->
+      <main class="message-view">
+        <div id="messageContent" class="message-content">
+          <!-- Message details will be shown here when a message is clicked -->
+          <p class="empty-state">Select a message to read</p>
+        </div>
+
+        <!-- Voice Features Section (hidden until message is selected) -->
+        <div id="voiceSection" class="voice-section" style="display: none;">
+          <hr class="divider" />
+          
+          <!-- Read Aloud Controls -->
+          <div class="voice-controls">
+            <h3>Voice Features</h3>
+            <div class="button-group">
+              <button id="readAloudBtn" class="btn-voice btn-read-aloud">🔊 Read Aloud</button>
+              <button id="stopReadingBtn" class="btn-voice btn-stop" style="display: none;">⏹️ Stop Reading</button>
+              <button id="voiceReplyBtn" class="btn-voice btn-voice-reply">🎤 Voice Reply</button>
+            </div>
+          </div>
+
+          <!-- Voice Reply Draft Section -->
+          <div id="voiceReplySection" class="voice-reply-section" style="display: none;">
+            <h3>Voice Reply Draft</h3>
+            
+            <!-- Listening Status -->
+            <div id="listeningStatus" class="listening-status" style="display: none;">
+              <div class="listening-dot"></div>
+              <span>Listening...</span>
+            </div>
+
+            <!-- Raw Recognized Speech -->
+            <div class="form-group" id="rawTranscriptGroup" style="display: none;">
+              <label for="rawTranscript">Raw Recognized Speech:</label>
+              <textarea 
+                id="rawTranscript" 
+                class="voice-textarea raw-transcript"
+                placeholder="Your raw voice input..."
+                readonly
+              ></textarea>
+            </div>
+
+            <!-- Cleaned Transcript -->
+            <div class="form-group" id="cleanedTranscriptGroup" style="display: none;">
+              <label for="cleanedTranscript">Normalized & Interpreted:</label>
+              <textarea 
+                id="cleanedTranscript" 
+                class="voice-textarea cleaned-transcript"
+                placeholder="Normalized text with grammar fixes..."
+                readonly
+              ></textarea>
+            </div>
+
+            <!-- Interpreted Ideas -->
+            <div class="form-group" id="interpretedIdeasGroup" style="display: none;">
+              <label for="interpretedIdeas">Interpreted Ideas:</label>
+              <textarea 
+                id="interpretedIdeas" 
+                class="voice-textarea interpreted-ideas"
+                placeholder="Scheduling, tasks, issues, and requests detected from your speech..."
+                readonly
+              ></textarea>
+            </div>
+
+            <!-- Final Polished Draft -->
+            <div class="form-group" id="polishedDraftGroup" style="display: none;">
+              <label for="voiceTranscript">Final Email Draft:</label>
+              <textarea 
+                id="voiceTranscript" 
+                class="voice-textarea polished-draft"
+                placeholder="Your polished email will appear here..."
+                readonly
+              ></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="voice-reply-actions" id="voiceReplyActions" style="display: none;">
+              <button id="generateReplyBtn" class="btn-generate-reply">Generate Reply</button>
+              <button id="cancelVoiceReplyBtn" class="btn-cancel-voice-reply">Cancel</button>
+            </div>
+
+            <!-- Send/Save Actions -->
+            <div class="voice-send-actions" id="voiceSendActions" style="display: none;">
+              <button id="sendReplyBtn" class="btn-send-reply">Send Reply</button>
+              <button id="editReplyBtn" class="btn-edit-reply">Edit</button>
+              <button id="cancelSendBtn" class="btn-cancel-send">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Yes/No Question Listening UI Modal (hidden by default) -->
+  <div id="listeningModAl" class="listening-modal" style="display: none;">
+    <div class="listening-panel">
+      <!-- Microphone icon -->
+      <div class="listening-icon">🎤</div>
+      
+      <!-- Question text -->
+      <h2 id="listeningQuestion" class="listening-question">Do you want to reply?</h2>
+      
+      <!-- Listening status -->
+      <p class="listening-subtext">Listening for yes or no...</p>
+      
+      <!-- Animated listening dots -->
+      <div class="listening-animation">
+        <span class="dot dot-1"></span>
+        <span class="dot dot-2"></span>
+        <span class="dot dot-3"></span>
+      </div>
+      
+      <!-- Countdown timer -->
+      <div class="listening-timer">
+        <div class="timer-label">Time remaining:</div>
+        <div id="countdownDisplay" class="timer-display">8s</div>
+      </div>
+      
+      <!-- Transcript showing what was heard -->
+      <div id="heardTranscript" class="heard-transcript" style="display: none;">
+        <p class="heard-label">Heard:</p>
+        <p id="heardText" class="heard-text"></p>
+      </div>
+      
+      <!-- Cancel button (for manual override) -->
+      <button id="cancelListeningBtn" class="btn-cancel-listening">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Compose Modal (hidden by default) -->
+  <div id="composeModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Compose New Message</h2>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
+      
+      <!-- Compose Form -->
+      <form id="composeForm" class="compose-form">
+        <div class="form-group">
+          <label for="toField">To:</label>
+          <input 
+            type="email" 
+            id="toField" 
+            placeholder="recipient@example.com" 
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="subjectField">Subject:</label>
+          <input 
+            type="text" 
+            id="subjectField" 
+            placeholder="Enter subject" 
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="messageField">Message:</label>
+          <textarea 
+            id="messageField" 
+            placeholder="Write your message here..." 
+            rows="10" 
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-send">Send</button>
+          <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
