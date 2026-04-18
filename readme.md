@@ -57,3 +57,174 @@ MAIL_HACK solves this by:
 ---
 
 ## 🏗️ Architecture
+Frontend (HTML/CSS/JS)
+│
+▼
+API Calls (fetch)
+│
+▼
+Backend (Node.js + Express)
+│
+▼
+OpenAI API (NLP Processing)
+│
+▼
+Response → Frontend UI
+
+
+---
+
+## 📂 Project Structure
+
+
+mail_hack/
+│
+├── frontend/
+│ ├── index.html # Main mail interface (Inbox, Sent)
+│ ├── meetings.html # Meeting management page
+│ ├── style.css # Global dark-mode styling
+│ ├── script.js # Mail logic (UI + API calls)
+│ ├── meetings.js # Meeting logic
+│ └── assets/ # Icons/images (optional)
+│
+├── backend/
+│ ├── server.js # Express server entry point
+│ ├── routes/
+│ │ ├── generateReply.js # AI email reply endpoint
+│ │ └── scheduleMeeting.js # AI meeting extraction endpoint
+│ └── config/
+│ └── openai.js # OpenAI API configuration
+│
+├── package.json # Backend dependencies
+├── .env # Environment variables (API key)
+└── README.md # Documentation
+
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the Repository
+```bash
+git clone <your-repo-url>
+cd mail_hack
+2. Install Backend Dependencies
+npm install
+3. Setup Environment Variables
+
+Create a .env file:
+
+OPENAI_API_KEY=your_api_key_here
+4. Run Backend Server
+npm start
+
+Server will run at:
+
+http://localhost:3000
+5. Run Frontend
+
+Open:
+
+frontend/index.html
+🔁 Application Workflows
+✉️ Email Reply Flow
+User opens an email
+Clicks voice input
+Speaks reply
+Speech → Text
+Request sent to backend (/generate-reply)
+OpenAI generates polished response
+Response added to Sent folder
+📅 Meeting Creation Flow
+User navigates to Meetings page
+Clicks "Create Meeting"
+Provides voice/text input
+Backend (/schedule-meeting) processes input
+AI extracts structured meeting details
+Meeting stored locally
+Confirmation email generated and added to Sent
+🧩 Core Components
+Frontend
+UI rendering and interaction
+Inbox, Sent, Meetings state management
+Uses localStorage for persistence
+Integrates browser voice APIs
+Backend
+Express server with REST APIs
+Handles AI requests
+Secures API keys and prompts
+AI Layer
+Email reply transformation
+Meeting detail extraction
+Prompt-based NLP workflows
+🗄️ Data Handling
+
+All data is stored locally using:
+
+localStorage
+Stored Data
+Sent emails (mailHackSentMessages)
+Meetings data
+Confirmation messages
+🔊 Voice Integration
+Speech Recognition
+Converts spoken input → text
+Used for replies and meeting creation
+Speech Synthesis
+Converts text → audio
+Used for reading emails aloud
+🧪 Challenges Faced
+Voice recognition inconsistencies
+Async frontend-backend communication
+Incorrect AI workflow triggering
+Debugging API responses
+UI state synchronization
+🏆 Accomplishments
+Built full-stack working demo system
+Integrated AI into real workflows
+Implemented voice-driven interaction
+Created clean modern UI
+Designed end-to-end automation pipeline
+⚠️ Limitations
+No real Gmail/Outlook integration
+No database (uses localStorage)
+Voice accuracy depends on browser
+Single-user demo only
+No authentication system
+🔮 Future Improvements
+Gmail/Outlook API integration
+Calendar sync (Google Calendar, Outlook)
+Database integration (MongoDB/Firebase)
+Multi-user authentication
+AI intent classification
+Mobile application
+🧠 Tech Stack
+Frontend
+HTML
+CSS (Dark Mode UI)
+JavaScript
+Backend
+Node.js
+Express
+AI
+OpenAI API
+Browser APIs
+SpeechRecognition
+SpeechSynthesis
+💡 Key Learnings
+Full-stack system design
+AI integration into workflows
+Voice-based interaction systems
+Async API handling and debugging
+UX design for productivity tools
+📢 Final Note
+
+MAIL_HACK demonstrates how traditional email systems can evolve into AI-assisted productivity platforms by combining:
+
+Natural Language Processing
+Voice Interaction
+Smart Automation
+Full-Stack Development
+👨‍💻 Author
+
+Vignesh Balaji
