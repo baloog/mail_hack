@@ -1,0 +1,209 @@
+:root {
+  --meet-bg: #0b1220;
+  --meet-bg-elevated: #121a2b;
+  --meet-panel: #182235;
+  --meet-panel-2: #1d2940;
+  --meet-border: #2b3853;
+  --meet-text: #e8eefc;
+  --meet-muted: #9fb0d1;
+  --meet-primary: #22c55e;
+  --meet-primary-hover: #16a34a;
+  --meet-secondary: #475569;
+  --meet-secondary-hover: #64748b;
+  --meet-purple: #a855f7;
+  --meet-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+
+body {
+  background: radial-gradient(circle at top left, #13203b 0%, #0b1220 45%, #08101d 100%);
+  color: var(--meet-text);
+}
+
+.meetings-page {
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.meetings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.meetings-header h1 {
+  font-size: 34px;
+  margin-bottom: 6px;
+  color: var(--meet-text);
+}
+
+.meetings-header p {
+  color: var(--meet-muted);
+  font-size: 15px;
+}
+
+.back-link {
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--meet-secondary), #334155);
+  color: white;
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: var(--meet-shadow);
+}
+
+.back-link:hover {
+  background: linear-gradient(135deg, var(--meet-secondary-hover), #475569);
+  transform: translateY(-1px);
+}
+
+.meetings-main {
+  max-width: 920px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.meetings-card {
+  background: linear-gradient(180deg, var(--meet-panel), var(--meet-panel-2));
+  border: 1px solid var(--meet-border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--meet-shadow);
+}
+
+.meetings-card h2 {
+  font-size: 21px;
+  margin-bottom: 18px;
+  color: var(--meet-text);
+}
+
+.form-group label {
+  color: var(--meet-text);
+  font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea {
+  background: #0f1728;
+  border: 1px solid var(--meet-border);
+  color: var(--meet-text);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #7f92b8;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #5b8cff;
+  box-shadow: 0 0 0 4px rgba(91, 140, 255, 0.14);
+}
+
+.btn-primary,
+.btn-secondary {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  color: white;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--meet-primary), #16a34a);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--meet-primary-hover), #15803d);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--meet-secondary), #334155);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, var(--meet-secondary-hover), #475569);
+  transform: translateY(-1px);
+}
+
+.result-item {
+  background: #0f1728;
+  border: 1px solid var(--meet-border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.result-label {
+  color: var(--meet-muted);
+}
+
+.result-value {
+  color: var(--meet-text);
+}
+
+.meeting-item {
+  border-left: 4px solid var(--meet-purple);
+  background: #0f1728;
+  border-radius: 14px;
+  padding: 15px 16px;
+  border: 1px solid var(--meet-border);
+}
+
+.meeting-item-title {
+  color: var(--meet-text);
+}
+
+.meeting-item-meta {
+  color: var(--meet-muted);
+}
+
+.meeting-item-purpose {
+  color: #d8e2f5;
+}
+
+.empty-text,
+.status-text {
+  color: var(--meet-muted);
+}
+
+.meeting-listening-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px;
+  background-color: rgba(20, 184, 166, 0.12);
+  border-left: 4px solid #14b8a6;
+  border-radius: 10px;
+  color: #7ce7da;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.meeting-listening-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  animation: meetingBlink 1s infinite;
+}
+
+@keyframes meetingBlink {
+  0%, 49%, 100% {
+    opacity: 1;
+  }
+  50%, 99% {
+    opacity: 0.3;
+  }
+}

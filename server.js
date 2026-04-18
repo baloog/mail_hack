@@ -69,6 +69,105 @@ app.post('/generate-reply', async (req, res) => {
   }
 });
 
+app.post('/schedule-meeting', async (req, res) => {
+  const { userEmail, meetingRequest } = req.body;
+
+  console.log('[MEETING] /schedule-meeting called');
+  console.log('[MEETING] userEmail:', userEmail);
+  console.log('[MEETING] meetingRequest snippet:', meetingRequest?.slice(0, 100));
+
+  if (!userEmail || !meetingRequest) {
+    return res.status(400).json({
+      error: 'userEmail and meetingRequest are required'
+    });
+  }
+
+  const prompt = `Extract meeting details from the user's natural language request and return ONLY valid JSON with this exact structure:
+{
+  "title": "string",
+  "date": "string",
+  "time": "string",
+  "attendees": ["string"],
+  "purpose": "string"
+}
+
+Rules:
+- Return only pure JSON
+- No markdown
+- No code block
+- Create a short professional title
+- Keep date and time human-readable
+- attendees must always be an array
+- purpose should be one clear sentence
+- Do not invent details not present in the request`;
+
+  const userMessage = `Meeting request: ${meetingRequest}`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a meeting scheduling assistant. Return only valid JSON.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        },
+        {
+          role: 'user',
+          content: userMessage
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 300
+    });
+
+    const responseText = completion.choices?.[0]?.message?.content?.trim();
+
+    console.log('[MEETING] OpenAI raw response:', responseText);
+
+    if (!responseText) {
+      return res.status(500).json({ error: 'OpenAI returned empty response' });
+    }
+
+    let meeting;
+    try {
+      meeting = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('[MEETING] JSON parse error:', parseError);
+      return res.status(500).json({ error: 'Failed to parse meeting details' });
+    }
+
+    if (!Array.isArray(meeting.attendees)) {
+      meeting.attendees = [];
+    }
+
+    if (!meeting.title) {
+      meeting.title = 'Untitled Meeting';
+    }
+
+    if (!meeting.date) {
+      meeting.date = 'Not specified';
+    }
+
+    if (!meeting.time) {
+      meeting.time = 'Not specified';
+    }
+
+    if (!meeting.purpose) {
+      meeting.purpose = 'No purpose provided';
+    }
+
+    console.log('[MEETING] Extracted meeting:', meeting);
+    return res.json({ meeting });
+  } catch (error) {
+    console.error('[MEETING] OpenAI request failed:', error);
+    return res.status(500).json({ error: 'Meeting extraction failed' });
+  }
+});
+
 app.listen(port, () => {
   console.log('Backend server running on http://localhost:3000');
 });

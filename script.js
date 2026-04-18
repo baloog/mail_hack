@@ -25,7 +25,12 @@ const messages = [
 ];
 
 // Sent messages array - stores replies
-const sentMessages = [];
+let sentMessages = [];
+
+function loadSentMessagesFromStorage() {
+  const stored = JSON.parse(localStorage.getItem('mailHackSentMessages') || '[]');
+  sentMessages = stored;
+}
 
 // Variable to track which message is currently selected
 let selectedMessageId = null;
@@ -39,6 +44,7 @@ let isWaitingForReplyConfirmation = false;
 // Initialize the app when page loads
 // ==========================================
 document.addEventListener('DOMContentLoaded', function() {
+  loadSentMessagesFromStorage();
   renderMessageList();
   renderSentList();
   setupEventListeners();
